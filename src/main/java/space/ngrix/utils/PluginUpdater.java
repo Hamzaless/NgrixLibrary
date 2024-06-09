@@ -8,18 +8,31 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * This class is responsible for checking the version of a plugin.
+ * It communicates with a server to verify the plugin name and version.
+ */
 public class PluginUpdater {
-
 
     private String response;
     private String pluginName;
     private String pluginVersion;
 
+    /**
+     * Constructor for the PluginUpdater class.
+     * @param pluginName The name of the plugin to be checked.
+     * @param version The version of the plugin to be checked.
+     */
     public PluginUpdater(String pluginName, String version) {
         this.pluginName = pluginName;
         this.pluginVersion = version;
     }
-    public boolean checkLicense(){
+
+    /**
+     * Checks the version by sending a POST request to the server.
+     * @return true if the server response contains "success", false otherwise.
+     */
+    public boolean checkVersion(){
         try {
             return postWebContent();
         } catch (Exception e) {
@@ -28,6 +41,11 @@ public class PluginUpdater {
         }
     }
 
+    /**
+     * Sends a POST request to the server with the plugin name.
+     * @return true if the server response contains "success", false otherwise.
+     * @throws Exception if an error occurs during the HTTP request.
+     */
     private boolean postWebContent() throws Exception {
         String url = "https://auth.ngrix.space/version";
 
@@ -57,16 +75,22 @@ public class PluginUpdater {
         return false;
     }
 
+    /**
+     * Extracts the version from the server response.
+     * @return the version as a string.
+     */
     public String getVersion(){
         JSONObject jsonObject = new JSONObject(response);
         return jsonObject.getString("version");
     }
 
+    /**
+     * Checks if the plugin is outdated by comparing the version from the server response with the local version.
+     * @return true if the plugin is outdated, false otherwise.
+     */
     public boolean isOutdated() {
         JSONObject jsonObject = new JSONObject(response);
         String version = jsonObject.getString("version");
         return !version.equals(this.pluginVersion);
     }
-
-
 }
