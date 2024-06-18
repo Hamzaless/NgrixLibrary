@@ -23,17 +23,11 @@ public class SQLite implements Database {
     @Override
     public Connection getConnection() {
         try {
-            // JDBC Class for SQLite
             Class.forName("org.sqlite.JDBC");
-            // Getting plugin name for folder destination
             String pluginName = DatabaseAPI.instance.getDescription().getName();
-            // Getting file
             File databaseFile = new File("plugins/" + pluginName + "/storage/database.db");
-            // Going in
             databaseFile.getParentFile().mkdirs();
-            // Catching absolute path
             String absolutePath = databaseFile.getParentFile().getAbsolutePath();
-            // Then using driver and return it.
             return DriverManager.getConnection("jdbc:sqlite:" + absolutePath + "/database.db");
         }
         catch (Exception e) { e.printStackTrace(); return null; }
